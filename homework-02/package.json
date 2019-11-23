@@ -1,7 +1,7 @@
 {
   "name": "homework-02",
-  "version": "1.0.0",
-  "description": "My homework 02",
+  "version": "1.0.1",
+  "description": "MA homework 02",
   "main": "./src/app.js",
   "scripts": {
     "start": "node ./src/app.js",
@@ -9,10 +9,6 @@
   },
   "author": "andrii tolmachov",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "nanoid": "^2.1.6"
-  },
   "devDependencies": {
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
