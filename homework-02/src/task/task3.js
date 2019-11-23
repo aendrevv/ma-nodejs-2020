@@ -4,4 +4,4 @@ function someFunction(timer, text) {
 
 // someFunction(1000, 'fuck off').then(res => console.log(res));
 
-module.exports.someFunction = someFunction(1000, 'some random text');
+module.exports.someFunction = someFunction(1000, "some random text");

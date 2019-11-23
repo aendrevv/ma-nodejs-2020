@@ -6,11 +6,15 @@ class Planet {
   }
 
   calcVolume() {
-    return Math.PI * this.diameter ** 3 / 6;
+    return (Math.PI * this.diameter ** 3) / 6;
   }
 
   printNameAndVolume() {
-    console.log(`Об'єм планети ${this.name} складає майже ${Math.round(this.volume / 1000000)} мільйонів кубічних кілометрів!`);
+    console.log(
+      `Об'єм планети ${this.name} складає майже ${Math.round(
+        this.volume / 1000000
+      )} мільйонів кубічних кілометрів!`
+    );
   }
 }
 
