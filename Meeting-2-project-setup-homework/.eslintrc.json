@@ -7,7 +7,7 @@
     },
     "extends": [
         "eslint:recommended", 
-        "prettier"
+        "plugin:prettier/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -16,6 +16,8 @@
     "parserOptions": {
         "ecmaVersion": 2018
     },
+    "plugins": ["prettier"],
     "rules": {
+        "prettier/prettier": "error"
     }
 }

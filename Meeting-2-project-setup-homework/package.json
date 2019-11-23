@@ -1,35 +1,35 @@
 {
-  "name": "meeting-2-project-setup-homework",
+  "name": "homework-01",
   "version": "1.0.0",
   "description": "My first MA homework (^__^)",
   "main": "./src/index.js",
   "scripts": {
-    "test": "node src/"
+    "start": "node ./src/index.js",
+    "linter": "eslint --ignore-path .gitignore . --fix"
   },
-  "author": "",
+  "author": "andrii tolmachov",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "nanoid": "^2.1.6"
   },
   "devDependencies": {
     "eslint": "^6.6.0",
-    "eslint-config-airbnb": "^18.0.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-react": "^7.16.0",
-    "eslint-plugin-react-hooks": "^1.7.0",
     "husky": "^3.0.9",
-    "prettier": "^1.13.0"
+    "prettier": "^1.19.1"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test",
-      "...": "..."
+      "pre-commit": "npm run linter"
     }
-  }
-
+  },
+  "keywords": [
+    "MoC",
+    "MA",
+    "homework"
+  ]
 }
