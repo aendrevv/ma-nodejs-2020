@@ -1,0 +1,12 @@
+{
+  "name": "homework-02",
+  "version": "1.0.0",
+  "description": "Home work :)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./src/app.js"
+  },
+  "keywords": ["MoC", "MA", "homework"],
+  "author": "andrii tolmachov",
+  "license": "ISC"
+}
