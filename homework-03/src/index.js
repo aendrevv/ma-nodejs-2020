@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+
 let number = 3;
 let primeMax = 3;
 
