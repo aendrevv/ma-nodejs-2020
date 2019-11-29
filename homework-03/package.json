@@ -1,6 +1,6 @@
 {
   "name": "homework-03",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MA homework 03",
   "main": "./src/index.js",
   "scripts": {
