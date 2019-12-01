@@ -14,7 +14,7 @@ function primeFinder() {
   }
 }
 
-setInterval(primeFinder(), 1);
+setInterval(primeFinder, 1);
 
 setInterval(() => {
   console.log(`${Date.now()}: -- IN PROCESS -- Biggest prime number found: ${primeMax}`);
