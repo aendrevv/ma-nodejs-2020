@@ -17,8 +17,8 @@ setTimeout(() => {
 
         setTimeout(() => {
           console.log(`The Sum is: ${diceA + diceB} , time: ${Date.now() - start}`);
-        }, 3000);
+        }, 1000);
       });
-    }, 2000);
+    }, 1300);
   });
 }, 700);
