@@ -1,30 +1,15 @@
-function throwDice(timeout) {
-  const dice = Math.floor(Math.random() * 1e10) % 7;
+const { throwDice, getSumAfterOneSec } = require('./myFunctions');
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (dice === 0) reject('LOST DICE!');
-
-      resolve(dice);
-    }, timeout);
-  });
-}
-
-let dice1, dice2;
 const start = Date.now();
 
 throwDice(700)
-  .then(result => {
-    dice1 = result;
-    console.log(`${Date.now() - start} -: 1 :- ${result}`);
+  .then(dice1 => {
+    console.log(`Running time: ${Date.now() - start}; First dice is: ${dice1}`);
+    throwDice(1300).then(dice2 => {
+      console.log(`Running time: ${Date.now() - start}; Second dice is: ${dice2}`);
+      getSumAfterOneSec(dice1, dice2).then(sum =>
+        console.log(`Running time: ${Date.now() - start}; The sum is: ${sum}`)
+      );
+    });
   })
   .catch(err => console.log(err));
-
-throwDice(2000)
-  .then(result => {
-    dice2 = result;
-    console.log(`${Date.now() - start} -: 2 :- ${result}`);
-  })
-  .catch(err => console.log(err));
-
-setTimeout(() => console.log(`${Date.now() - start} -:sum:- ${dice1 + dice2}`), 3000);
