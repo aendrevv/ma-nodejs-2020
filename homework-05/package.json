@@ -1,0 +1,31 @@
+{
+  "name": "homework-05",
+  "version": "1.0.1",
+  "description": "MA homework 05",
+  "main": "./src/index.js",
+  "scripts": {
+    "START": "node ./src/index.js",
+    "lintr": "eslint --ignore-path .gitignore . --fix"
+  },
+  "author": "andrii tolmachov",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.0.9",
+    "prettier": "^1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lintr"
+    }
+  },
+  "keywords": [
+    "MoC",
+    "MA",
+    "homework"
+  ]
+}
