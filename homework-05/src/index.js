@@ -29,15 +29,19 @@ async function getInputFileList() {
 
 async function getObjectFromFile(filePath) {
   let object;
+  let compressedBuffer;
+
   try {
-    const compressedBuffer = await fsp.readFile(filePath);
-  } catch {
+    compressedBuffer = await fsp.readFile(filePath);
+  } catch (error) {
     console.error(error.message);
     throw new Error(`Error occured: ${filePath} can not be read!\n`);
   }
+
+  let jSonBuffer;
   try {
-    const jSonBuffer = await gunzip(compressedBuffer);
-  } catch {
+    jSonBuffer = await gunzip(compressedBuffer);
+  } catch (error) {
     console.error(error.message);
     throw new Error(`Error occured: ${compressedBuffer} can not be gunziped!\n`);
   }
@@ -45,7 +49,7 @@ async function getObjectFromFile(filePath) {
     const jSon = jSonBuffer.toString();
     object = JSON.parse(jSon);
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     throw new Error(`Error occured: ${jSonBuffer} can not be stringified!\n`);
   }
   return object;
@@ -72,7 +76,7 @@ async function buildOutputObject(files) {
       // eslint-disable-next-line no-await-in-loop
       object = await getObjectFromFile(file);
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
       throw new Error(`The Error occured: can not get object from ${file}.\n`);
     }
     object.url = rebuildUrl(object.url);
@@ -90,8 +94,9 @@ async function saveOutput(object) {
 
 async function start() {
   const inputFiles = await getInputFileList();
+  let outputObject;
   try {
-    const outputObject = await buildOutputObject(inputFiles);
+    outputObject = await buildOutputObject(inputFiles);
     await saveOutput(outputObject);
   } catch (error) {
     console.error(error.message);
