@@ -21,7 +21,8 @@ async function getInputFileList() {
   try {
     files = await fsp.readdir(inputDir);
   } catch (error) {
-    throw new Error(`Error !`);
+    console.error(error.message);
+    throw new Error(`Error occured: ${inputDir} can not be read!\n`);
   }
   return files.map(file => path.join(inputDir, file));
 }
@@ -30,12 +31,22 @@ async function getObjectFromFile(filePath) {
   let object;
   try {
     const compressedBuffer = await fsp.readFile(filePath);
+  } catch {
+    console.error(error.message);
+    throw new Error(`Error occured: ${filePath} can not be read!\n`);
+  }
+  try {
     const jSonBuffer = await gunzip(compressedBuffer);
+  } catch {
+    console.error(error.message);
+    throw new Error(`Error occured: ${compressedBuffer} can not be gunziped!\n`);
+  }
+  try {
     const jSon = jSonBuffer.toString();
     object = JSON.parse(jSon);
   } catch (error) {
     console.error(error);
-    throw new Error(`Error !`);
+    throw new Error(`Error occured: ${jSonBuffer} can not be stringified!\n`);
   }
   return object;
 }
@@ -62,10 +73,10 @@ async function buildOutputObject(files) {
       object = await getObjectFromFile(file);
     } catch (error) {
       console.error(error);
-      throw new Error(`Error !`);
+      throw new Error(`The Error occured: can not get object from ${file}.\n`);
     }
     object.url = rebuildUrl(object.url);
-    const name = path.basename(file.toLowerCase(), 'json.gz');
+    const name = path.basename(file.toLowerCase(), '.json.gz');
     result[name] = object;
   }
   return result;
@@ -83,8 +94,8 @@ async function start() {
     const outputObject = await buildOutputObject(inputFiles);
     await saveOutput(outputObject);
   } catch (error) {
-    console.error(error);
-    throw new Error(`Error !`);
+    console.error(error.message);
+    throw new Error(`The Error occured: ${outputObject} can not be saved!`);
   }
 }
 
