@@ -1,22 +1,97 @@
-const { showMemory } = require('./ram');
+const { getMemory, isItValidNumber } = require('./funcs');
 
 const getLimit = async (req, res) => {
-  const { queryParams } = req;
-  const { limit } = queryParams;
+  try {
+    const {
+      headers: { authorization: auth },
+      body: { limit },
+    } = req;
 
-  res.statusCode = 200;
-  res.end(JSON.stringify(showMemory(Number(limit))));
+    if (auth !== 'Basic QW5kcmlpOk9uZVR3bzM0') {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: `Unathorized!` }));
+    }
+
+    if (isItValidNumber(parseInt(limit))) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          message: `Minimum free memory limit is successfully set to ${limit} MB`,
+        })
+      );
+    } else {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(
+        JSON.stringify({ message: `New value for minimum free memory limit is not valid number` })
+      );
+    }
+  } catch (error) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: `Internal error occured` }));
+  }
 };
 
 const getMetrics = async (req, res) => {
-  const { queryParams } = req;
-  const { limit } = queryParams;
+  try {
+    const {
+      headers: { authorization: auth },
+      queryParams: { filter },
+    } = req;
 
-  console.log('asdfgh');
+    if (auth !== 'Basic QW5kcmlpOk9uZVR3bzM0') {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: `Unauthorised!` }));
+    }
+    if (!filter) {
+      const ram = getMemory();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(ram));
+    }
+    switch (filter) {
+      case 'total':
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(
+          JSON.stringify({
+            message: 'OK',
+            total: `${getMemory().totalMem}`,
+          })
+        );
+        break;
 
-  res.statusCode = 200;
-  return res.end(JSON.stringify(showMemory(Number(limit))));
+      case 'free':
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(
+          JSON.stringify({
+            message: 'OK',
+            free: `${getMemory().freeMem}`,
+          })
+        );
+        break;
+
+      case 'allocated':
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(
+          JSON.stringify({
+            message: 'OK',
+            allocated: `${getMemory().allocMem}`,
+          })
+        );
+        break;
+
+      default:
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'Filter value is not valid' }));
+        break;
+    }
+  } catch (error) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: `Internal error occured` }));
+  }
 };
-// console.log('RAM:', ram());
 
-module.exports = { getLimit, getMetrics };
+const notFound = res => {
+  res.writeHead(404, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ message: 'Not Found' }));
+};
+
+module.exports = { getLimit, getMetrics, notFound };

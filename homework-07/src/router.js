@@ -1,23 +1,15 @@
-const controller = require('./controller');
-
-function notFound(res) {
-  res.statusCode = 404;
-  // res.setHeader('Content-Type: application/json');
-  res.end();
-}
+const { getLimit, getMetrics, notFound } = require('./controller');
 
 const router = (req, res) => {
   const { url, method } = req;
 
   switch (url.pathname) {
     case '/limit':
-      if (method === 'POST') controller.getLimit(req, res);
+      method === 'POST' ? getLimit(req, res) : notFound(res);
       break;
-
     case '/metrics':
-      if (method === 'GET') controller.getMetrics(req, res);
+      method === 'GET' ? getMetrics(req, res) : notFound(res);
       break;
-
     default:
       notFound(res);
       break;

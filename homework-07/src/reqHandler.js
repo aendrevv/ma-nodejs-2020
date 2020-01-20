@@ -8,6 +8,10 @@ const reqHandler = async (request, response) => {
     const parsedUrl = url.parse(uri);
     const queryParams = querystring.decode(parsedUrl.query);
 
+    // console.log(queryParams.filter);
+    // console.log(uri);
+    // console.log(parsedUrl);
+
     let body = [];
 
     request
@@ -26,9 +30,9 @@ const reqHandler = async (request, response) => {
           response
         );
       });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error('\tOOPS!\n', err);
   }
 };
 
-module.exports = { reqHandler };
+module.exports = reqHandler;
