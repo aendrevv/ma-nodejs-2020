@@ -1,11 +1,11 @@
-const { getLimit, getMetrics, notFound } = require('./controller');
+const { setLimit, getMetrics, notFound } = require('./controller');
 
 const router = (req, res) => {
   const { url, method } = req;
 
   switch (url.pathname) {
     case '/limit':
-      method === 'POST' ? getLimit(req, res) : notFound(res);
+      method === 'POST' ? setLimit(req, res) : notFound(res);
       break;
     case '/metrics':
       method === 'GET' ? getMetrics(req, res) : notFound(res);
