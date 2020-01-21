@@ -1,6 +1,6 @@
 const { getMemory, isItValidNumber } = require('./funcs');
 
-const getLimit = async (req, res) => {
+const setLimit = async (req, res) => {
   try {
     const {
       headers: { authorization: auth },
@@ -94,4 +94,4 @@ const notFound = res => {
   res.end(JSON.stringify({ message: 'Not Found' }));
 };
 
-module.exports = { getLimit, getMetrics, notFound };
+module.exports = { setLimit, getMetrics, notFound };
