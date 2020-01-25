@@ -1,4 +1,4 @@
-const { getMemory, isItValidNumber } = require('./funcs');
+const { getMemory, isItValidNumber, updateLimit } = require('./funcs');
 
 const setLimit = async (req, res) => {
   try {
@@ -12,17 +12,22 @@ const setLimit = async (req, res) => {
       res.end(JSON.stringify({ message: `Unathorized!` }));
     }
 
-    if (isItValidNumber(parseInt(limit))) {
+    const numLimit = +limit;
+
+    if (isItValidNumber(numLimit)) {
+      updateLimit(numLimit);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(
         JSON.stringify({
-          message: `Minimum free memory limit is successfully set to ${limit} MB`,
+          message: `Minimum free memory limit is successfully set to ${numLimit} MB`,
         })
       );
     } else {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(
-        JSON.stringify({ message: `New value for minimum free memory limit is not valid number` })
+        JSON.stringify({
+          message: `New value for minimum free memory limit ${limit} is not valid number`,
+        })
       );
     }
   } catch (error) {
