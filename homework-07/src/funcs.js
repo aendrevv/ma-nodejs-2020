@@ -1,8 +1,13 @@
 const os = require('os');
 
-const getMemory = () => {
-  const limit = 1000;
+let limit;
 
+const updateLimit = x => {
+  limit = x;
+  return limit;
+};
+
+const getMemory = () => {
   const result = {
     message: 'OK!',
     totalMem: (os.totalmem() / 2 ** 20).toFixed(3),
@@ -11,13 +16,12 @@ const getMemory = () => {
   };
 
   if (result.freeMem < limit) {
-    result.errorMessage = `!!! ATTENTION: Available memory is under the defined limit !!!`;
+    result.warningMessage = `!!! ATTENTION: Available memory is under the defined limit ${limit} MB  !!!`;
   }
 
   return result;
 };
 
-const isItValidNumber = num =>
-  typeof num === 'number' && num === num && num !== Infinity && num !== -Infinity && num > 0;
+const isItValidNumber = num => typeof num === 'number' && num > 0;
 
-module.exports = { getMemory, isItValidNumber };
+module.exports = { getMemory, isItValidNumber, updateLimit };
