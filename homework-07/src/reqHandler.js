@@ -12,18 +12,23 @@ const reqHandler = async (request, response) => {
     // console.log(uri);
     // console.log(parsedUrl);
 
-    let body = [];
+    let body = '';
 
     request
       .on('error', err => console.error(err))
-      .on('data', chunk => body.push(chunk))
+      .on('data', data => (body += data))
       .on('end', () => {
-        body = Buffer.concat(body).toString();
-
+        if (body) {
+          try {
+            JSON.parse(body);
+          } catch (err) {
+            console.error('Not valid JSON!', err);
+          }
+        }
         router(
           {
             ...request,
-            body: body ? JSON.parse(body) : {},
+            body,
             url: parsedUrl,
             queryParams,
           },
