@@ -2,13 +2,13 @@
   "name": "homework-08",
   "version": "1.0.1",
   "description": "MA homework 08",
-  "main": "./src/app.js",
+  "main": "./src/main.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aendrevv/ma-nodejs-2020.git"
   },
   "scripts": {
-    "start": "node ./src/app.js",
+    "start": "node ./src/main.js",
     "lintr": "eslint --ignore-path .gitignore . --fix"
   },
   "author": "andrii tolmachov",
@@ -27,10 +27,16 @@
       "pre-commit": "npm run lintr"
     }
   },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5"
+  },
   "keywords": [
     "MoC",
     "MA",
     "homework",
+    "homework-08",
     "08"
   ]
 }
