@@ -19,7 +19,7 @@ const setLimit = async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(
         JSON.stringify({
-          message: `Minimum free memory limit is successfully set to [${numLimit}] MB`,
+          message: `Minimum free memory limit is successfully set to ${numLimit} MB`,
         })
       );
     } else {
@@ -109,10 +109,10 @@ const getRandomStatus = async (req, res) => {
 
     if (randStatusCodeAdd > 30) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end();
+      res.end(JSON.stringify({ message: `OK!` }));
     } else {
       res.writeHead(400 + randStatusCodeAdd, { 'Content-Type': 'application/json' });
-      res.end();
+      res.end(JSON.stringify({ message: `Error!` }));
     }
   } catch (error) {
     res.writeHead(500, { 'Content-Type': 'application/json' });

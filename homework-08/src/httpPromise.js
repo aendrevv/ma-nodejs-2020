@@ -1,17 +1,6 @@
 const http = require('http');
 
-const options = {
-  method: 'GET',
-  hostname: 'localhost',
-  port: 3000,
-  path: '/metrics?filter=free',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Basic QW5kcmlpOk9uZVR3bzM0',
-  },
-};
-
-const options_limit = {
+const optionsPost = {
   method: 'POST',
   hostname: 'localhost',
   port: 3000,
@@ -20,10 +9,16 @@ const options_limit = {
     'Content-Type': 'application/json',
     Authorization: 'Basic QW5kcmlpOk9uZVR3bzM0',
   },
-  body: JSON.stringify({ limit: 6666 }),
+  body: JSON.stringify({ limit: 1488 }),
 };
 
-const test_options = new URL('http://Andrii:OneTwo34@localhost:3000/metrics?filter=free');
+const optionsGet = [
+  new URL('http://Andrii:OneTwo34@localhost:3000/metrics'),
+  new URL('http://Andrii:OneTwo34@localhost:3000/metrics?filter=total'),
+  new URL('http://Andrii:OneTwo34@localhost:3000/metrics?filter=allocated'),
+  new URL('http://Andrii:OneTwo34@localhost:3000/metrics?filter=free'),
+  new URL('http://Andrii:OneTwo34@localhost:3000/new'),
+];
 
 function httpRequestPromisified(options) {
   return new Promise((resolve, reject) => {
@@ -35,7 +30,7 @@ function httpRequestPromisified(options) {
 
       response.on('data', chunk => (rawData += chunk));
       response.on('end', () => {
-        response.data = rawData;
+        response.data = JSON.parse(rawData);
         resolve(response);
       });
     });
@@ -48,14 +43,30 @@ function httpRequestPromisified(options) {
   });
 }
 
-httpRequestPromisified(options)
-  .then(response => console.log('RAM:\n', JSON.parse(response.data)))
-  .catch(err => console.error(`problem with request: ${err.message}`));
-
-httpRequestPromisified(options_limit)
-  .then(response => console.log('LIMIT MSG:\n', JSON.parse(response.data)))
-  .catch(err => console.error(`problem with request: ${err.message}`));
-
-httpRequestPromisified(test_options)
-  .then(response => console.log('LIMIT MSG:\n', JSON.parse(response.data)))
-  .catch(err => console.error(`problem with request: ${err.message}`));
+setInterval(() => {
+  httpRequestPromisified(optionsPost)
+    .then(response => {
+      console.log(response.data);
+      return httpRequestPromisified(optionsGet[0]);
+    })
+    .then(response => {
+      console.log(response.data);
+      return httpRequestPromisified(optionsGet[1]);
+    })
+    .then(response => {
+      console.log(response.data);
+      return httpRequestPromisified(optionsGet[2]);
+    })
+    .then(response => {
+      console.log(response.data);
+      return httpRequestPromisified(optionsGet[3]);
+    })
+    .then(response => {
+      console.log(response.data);
+      return httpRequestPromisified(optionsGet[4]);
+    })
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(err => console.error(`ERROR!: ${err.message}`));
+}, 7000);

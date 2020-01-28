@@ -11,7 +11,7 @@ const router = (req, res) => {
       method === 'GET' ? getMetrics(req, res) : notFound(res);
       break;
     case '/new':
-      getRandomStatus(req, res);
+      method === 'GET' ? getRandomStatus(req, res) : notFound(res);
       break;
     default:
       notFound(res);
