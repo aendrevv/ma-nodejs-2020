@@ -1,5 +1,5 @@
 const http = require('http');
-// const retry = require('retry');
+const retry = require('retry');
 const endpoints = require('./endpoints');
 
 const optionsPost = {
@@ -37,23 +37,32 @@ function httpRequestPromisified(options) {
   });
 }
 
-console.time('x');
-
 function hrp(time) {
   setInterval(() => {
-    httpRequestPromisified(optionsPost)
-      .then(response => {
-        console.log(response.data);
-        return httpRequestPromisified(endpoints.newEndPoint);
-      })
-      .then(response => {
-        console.log(response.data);
-        return httpRequestPromisified(endpoints.metrics);
-      })
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(err => console.error(`ERROR!: ${err.message}`));
+    const operation = retry.operation({
+      retries: 20,
+      factor: 2,
+      minTimeout: 100,
+    });
+
+    operation.attempt(currentAttempt => {
+      httpRequestPromisified(endpoints.newEndPoint)
+        .then(response => {
+          console.log(`Current STATUS:\n ${response.statusCode} on ${currentAttempt} attempt`);
+          return httpRequestPromisified(optionsPost);
+        })
+        .then(response => {
+          console.log('Current LIMIT:\n', response.data);
+          return httpRequestPromisified(endpoints.metrics);
+        })
+        .then(response => console.log('Current METRICS\n', response.data))
+        .catch(error => {
+          if (operation.retry(error)) {
+            console.error('An error with request to NEW:\n', error.message);
+            return;
+          }
+        });
+    });
   }, time);
 }
 

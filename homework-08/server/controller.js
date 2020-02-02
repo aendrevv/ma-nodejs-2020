@@ -110,7 +110,7 @@ const getRandomStatus = async (req, res) => {
     const xx = getRandomNumber(100); //returns random integer 0..100
 
     if (xx < x) {
-      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.writeHead(418, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: `FAIL!` }));
     } else {
       res.writeHead(200, { 'Content-Type': 'application/json' });

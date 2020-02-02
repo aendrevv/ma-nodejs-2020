@@ -20,6 +20,7 @@ const optionsMetrics = {
   uri: endpoints.metrics,
   json: true,
 };
+
 function rpn(time) {
   setInterval(() => {
     const operation = retry.operation({
@@ -31,16 +32,14 @@ function rpn(time) {
     operation.attempt(currentAttempt => {
       rp(optionsNew)
         .then(response => {
-          console.log(
-            `Current STATUS:\n ${response.status}, ${response.statusText}, on ${currentAttempt} attempt`
-          );
+          console.log(`Current STATUS:\n ${response.message} on ${currentAttempt} attempt`);
           return rp(optionsLimit);
         })
         .then(response => {
-          console.log('Current LIMIT:\n', response.data);
+          console.log('Current LIMIT:\n', response);
           return rp(optionsMetrics);
         })
-        .then(response => console.log('Current METRICS', response.data))
+        .then(response => console.log('Current METRICS\n', response))
         .catch(error => {
           if (operation.retry(error)) {
             console.error('An error with request to NEW:\n', error.message);
