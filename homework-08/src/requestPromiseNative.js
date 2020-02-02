@@ -1,33 +1,54 @@
-//some code
-const request = require('request-promise');
+const rp = require('request-promise');
+const retry = require('retry');
+const endpoints = require('./endpoints');
 
-const options_limit = {
+const optionsLimit = {
   method: 'POST',
-  url: 'http://localhost:3000/limit',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Basic QW5kcmlpOk9uZVR3bzM0',
-  },
+  uri: endpoints.limit,
   body: {
-    limit: 9999,
+    limit: 500,
   },
   json: true,
 };
 
-const options_metrics = {
-  method: 'GET',
-  url: 'http://localhost:3000/metrics',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Basic QW5kcmlpOk9uZVR3bzM0',
-  },
+const optionsNew = {
+  uri: endpoints.newEndPoint,
   json: true,
 };
 
-request(options_limit)
-  .then(response => console.log('LIMIT:\n', response))
-  .catch(err => console.error(':(', err));
+const optionsMetrics = {
+  uri: endpoints.metrics,
+  json: true,
+};
+function rpn(time) {
+  setInterval(() => {
+    const operation = retry.operation({
+      retries: 7,
+      factor: 2,
+      minTimeout: 100,
+    });
 
-request(options_metrics)
-  .then(response => console.log('METRICS:\n', response))
-  .catch(err => console.error(':(', err));
+    operation.attempt(currentAttempt => {
+      rp(optionsNew)
+        .then(response => {
+          console.log(
+            `Current STATUS:\n ${response.status}, ${response.statusText}, on ${currentAttempt} attempt`
+          );
+          return rp(optionsLimit);
+        })
+        .then(response => {
+          console.log('Current LIMIT:\n', response.data);
+          return rp(optionsMetrics);
+        })
+        .then(response => console.log('Current METRICS', response.data))
+        .catch(error => {
+          if (operation.retry(error)) {
+            console.error('An error with request to NEW:\n', error.message);
+            return;
+          }
+        });
+    });
+  }, time);
+}
+
+module.exports = { rpn };

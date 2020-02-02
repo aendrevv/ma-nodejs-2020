@@ -1,45 +1,34 @@
-// some code
-const axios = require('axios');
+const axios = require('axios').default;
+const retry = require('retry');
+const endpoints = require('./endpoints');
 
-async function getMetrics() {
-  try {
-    const response = await axios({
-      method: 'GET',
-      url: 'http://localhost:3000/metrics',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic QW5kcmlpOk9uZVR3bzM0',
-      },
+function axi(time) {
+  setInterval(() => {
+    const operation = retry.operation({
+      retries: 7,
+      factor: 2,
+      minTimeout: 100,
+      randomize: true,
     });
-    console.log(response.data);
-  } catch (error) {
-    console.error('OOPS!', error);
-  }
+
+    operation.attempt(async currentAttempt => {
+      try {
+        const response1 = await axios.get(endpoints.newEndPoint);
+        console.log(
+          `Current STATUS:\n ${response1.status}, ${response1.statusText}, on ${currentAttempt} attempt`
+        );
+        const response2 = await axios.get(endpoints.metrics);
+        console.log('Current METRICS:\n', response2.data);
+        const response3 = await axios.post(endpoints.limit, { limit: 500 });
+        console.log('Current LIMIT:\n', response3.data);
+      } catch (error) {
+        if (operation.retry(error)) {
+          console.error('An error with request to NEWENDPOINT:\n', error.message);
+          return;
+        }
+      }
+    });
+  }, time);
 }
 
-async function getLimit() {
-  try {
-    const response = await axios({
-      method: 'POST',
-      url: 'http://localhost:3000/limit',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Basic QW5kcmlpOk9uZVR3bzM0',
-      },
-      data: {
-        limit: 9999,
-      },
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.error('OOPS!', error);
-  }
-}
-
-getLimit();
-getMetrics();
-axios
-  .get('http://Andrii:OneTwo34@localhost:3000/metrics?filter=free')
-  .then(response => console.log(':)\n', response.data))
-  .catch(err => console.error(':(\n', err))
-  .finally(() => console.log(`That's all, folks :D`));
+module.exports = { axi };

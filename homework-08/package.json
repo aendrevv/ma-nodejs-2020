@@ -2,14 +2,15 @@
   "name": "homework-08",
   "version": "1.0.1",
   "description": "MA homework 08",
-  "main": "./src/main.js",
+  "main": "./src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aendrevv/ma-nodejs-2020.git"
   },
   "scripts": {
-    "start": "node ./src/main.js",
-    "lintr": "eslint --ignore-path .gitignore . --fix"
+    "server": "node ./server/server.js",
+    "start": "node ./src/index.js",
+    "linter": "eslint --ignore-path .gitignore . --fix"
   },
   "author": "andrii tolmachov",
   "license": "ISC",
@@ -24,13 +25,16 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lintr"
+      "pre-commit": "npm run linter"
     }
   },
   "dependencies": {
     "axios": "^0.19.2",
     "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "retry": "^0.12.0",
+    "retry-axios": "^2.1.1",
+    "vorpal": "^1.12.0"
   },
   "keywords": [
     "MoC",

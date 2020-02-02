@@ -105,14 +105,16 @@ const getRandomStatus = async (req, res) => {
       res.end(JSON.stringify({ message: `Unathorized!` }));
     }
 
-    const randStatusCodeAdd = Math.floor(Math.random() * 100);
+    const getRandomNumber = max => Math.ceil(Math.random() * max);
+    const x = getRandomNumber(10) + 30; //returns random integer 31..40
+    const xx = getRandomNumber(100); //returns random integer 0..100
 
-    if (randStatusCodeAdd > 30) {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: `OK!` }));
+    if (xx < x) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: `FAIL!` }));
     } else {
-      res.writeHead(400 + randStatusCodeAdd, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: `Error!` }));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: `SUCCESS!` }));
     }
   } catch (error) {
     res.writeHead(500, { 'Content-Type': 'application/json' });
