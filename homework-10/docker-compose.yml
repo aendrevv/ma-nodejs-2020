@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:9.6.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: justAnotherUser
+      POSTGRES_DB: justAnotherDB
+      POSTGRES_PASSWORD: p455w0rd
+    ports:
+      - 54321:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
