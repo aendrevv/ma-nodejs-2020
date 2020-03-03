@@ -23,7 +23,6 @@ const createTable = async (pgclient, scrypt) => {
 
 const addUser = async (pgclient, scrypt, values) => {
   const res = await pgclient.query(scrypt, values);
-  console.table(res);
 }
 
 const deleteTable = async (pgclient) => {
@@ -39,7 +38,7 @@ const updateAge = async (pgclient) => {
 }
 
 const deleteByLogin = async (pgclient, login) => {
-  const res = await pgclient.query(`DELETE FROM users WHERE Login = ${login}`);
+  const res = await pgclient.query(`DELETE FROM users WHERE Login = $1`, [login]);
 }
 
 const init = async () => {
@@ -54,6 +53,8 @@ const init = async () => {
       addUser(client, insertUserScrypt, values[2]),
       addUser(client, insertUserScrypt, values[3]),
     ]);
+
+    await deleteByLogin(client, 'leonid kuchma');
 
     client.end();
   } catch (error) {
